@@ -1,4 +1,4 @@
-﻿// data/Prescriptionhelper.cs
+﻿
 using Clinic.Models;
 using Microsoft.Data.SqlClient;
 
@@ -8,6 +8,7 @@ namespace Clinic.data
     {
         string connectionString = "Data Source=DESKTOP-31NBFCJ\\SQLEXPRESS;Initial Catalog=ClinicDB;Integrated Security=True;Trust Server Certificate=True";
 
+        // Register Prescription
         public Response PrescriptionRegistration(Prescription p)
         {
             try
@@ -35,6 +36,7 @@ namespace Clinic.data
             }
         }
 
+        // Update Prescription
         public Response UpdatePrescription(Prescription p)
         {
             try
@@ -65,6 +67,7 @@ namespace Clinic.data
             }
         }
 
+        // Get All Prescriptions or Get Prescription by ID
         public Response GetAllPrescriptions(int prescriptionId)
         {
             try
@@ -108,6 +111,7 @@ namespace Clinic.data
             }
         }
 
+        // Delete Prescription
         public Response DeletePrescription(int prescriptionId)
         {
             try

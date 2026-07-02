@@ -1,4 +1,4 @@
-﻿// Models/Visit.cs
+﻿
 namespace Clinic.Models
 {
     public class Visit

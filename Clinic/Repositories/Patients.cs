@@ -8,10 +8,10 @@ namespace Clinic.Models
 
         public int UserId { get; set; }
 
-        [Required]
+      
         public string FirstName { get; set; } = "";
 
-        [Required]
+      
         public string LastName { get; set; } = "";
 
         public string Gender { get; set; } = "";

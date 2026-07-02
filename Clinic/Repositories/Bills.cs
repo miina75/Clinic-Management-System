@@ -1,5 +1,4 @@
-﻿// Models/Bill.cs
-namespace Clinic.Models
+﻿namespace Clinic.Models
 {
     public class Bill
     {

@@ -1,4 +1,4 @@
-﻿// data/Visithelper.cs
+﻿
 using Clinic.Models;
 using Microsoft.Data.SqlClient;
 
@@ -8,6 +8,7 @@ namespace Clinic.data
     {
         string connectionString = "Data Source=DESKTOP-31NBFCJ\\SQLEXPRESS;Initial Catalog=ClinicDB;Integrated Security=True;Trust Server Certificate=True";
 
+        // Register Visit
         public Response VisitRegistration(Visit v)
         {
             try
@@ -34,6 +35,7 @@ namespace Clinic.data
             }
         }
 
+        // Update Visit
         public Response UpdateVisit(Visit v)
         {
             try
@@ -62,6 +64,7 @@ namespace Clinic.data
             }
         }
 
+        // Get All Visits or Get Visit by ID
         public Response GetAllVisits(int visitId)
         {
             try
@@ -105,6 +108,7 @@ namespace Clinic.data
             }
         }
 
+        // Delete Visit
         public Response DeleteVisit(int visitId)
         {
             try

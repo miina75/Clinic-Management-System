@@ -1,5 +1,4 @@
-﻿// Controllers/VisitController.cs
-using Clinic.data;
+﻿using Clinic.data;
 using Clinic.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,6 +10,7 @@ namespace Clinic.Controllers
     {
         Visithelper helper = new Visithelper();
 
+        // POST: api/Patient/Register
         [HttpPost("Register")]
         public IActionResult Register(Visit v)
         {
@@ -19,6 +19,7 @@ namespace Clinic.Controllers
             else return BadRequest(response);
         }
 
+        // PUT: api/Patient/Update/5
         [HttpPut("Update/{id}")]
         public IActionResult Update(int id, Visit v)
         {
@@ -28,6 +29,7 @@ namespace Clinic.Controllers
             else return BadRequest(response);
         }
 
+        // GET: api/Patient/GetAll
         [HttpGet("GetAll")]
         public IActionResult GetAll()
         {
@@ -36,6 +38,7 @@ namespace Clinic.Controllers
             else return NotFound(response);
         }
 
+        // GET: api/Patient/GetById/5
         [HttpGet("GetById/{id}")]
         public IActionResult GetById(int id)
         {
@@ -44,6 +47,7 @@ namespace Clinic.Controllers
             else return NotFound(response);
         }
 
+        // DELETE: api/Patient/Delete/5
         [HttpDelete("Delete/{id}")]
         public IActionResult Delete(int id)
         {

@@ -8,8 +8,9 @@ namespace Clinic.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        Usershelper helper = new Usershelper(); // 👈 Usershelper not Userhelper
+        Usershelper helper = new Usershelper();
 
+        // POST: api/Patient/Register
         [HttpPost("Register")]
         public IActionResult Register(Users u)
         {
@@ -18,15 +19,17 @@ namespace Clinic.Controllers
             else return BadRequest(response);
         }
 
+        // PUT: api/Patient/Update/5
         [HttpPut("Update/{UserId}")]
         public IActionResult Update(int UserId, Users u)
         {
-            u.UserId = UserId; // 👈 set the id from the URL into the object
+            u.UserId = UserId; 
             Response response = helper.UpdateUser(u);
             if (response.Status) return Ok(response);
             else return BadRequest(response);
         }
 
+        // GET: api/Patient/GetAll
         [HttpGet("GetAll")]
         public IActionResult GetAll()
         {
@@ -35,6 +38,7 @@ namespace Clinic.Controllers
             else return NotFound(response);
         }
 
+        // GET: api/Patient/GetById/5
         [HttpGet("GetById/{id}")]
         public IActionResult GetById(int id)
         {
@@ -43,6 +47,7 @@ namespace Clinic.Controllers
             else return NotFound(response);
         }
 
+        // DELETE: api/Patient/Delete/5
         [HttpDelete("Delete/{id}")]
         public IActionResult Delete(int id)
         {

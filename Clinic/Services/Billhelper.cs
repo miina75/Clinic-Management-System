@@ -1,4 +1,4 @@
-﻿// data/Billhelper.cs
+﻿
 using Clinic.Models;
 using Microsoft.Data.SqlClient;
 
@@ -8,6 +8,7 @@ namespace Clinic.data
     {
         string connectionString = "Data Source=DESKTOP-31NBFCJ\\SQLEXPRESS;Initial Catalog=ClinicDB;Integrated Security=True;Trust Server Certificate=True";
 
+        // Register Bill
         public Response BillRegistration(Bill b)
         {
             try
@@ -34,6 +35,7 @@ namespace Clinic.data
             }
         }
 
+        // Update Bill
         public Response UpdateBill(Bill b)
         {
             try
@@ -62,6 +64,7 @@ namespace Clinic.data
             }
         }
 
+        // Get All Bills or Get Bill by ID
         public Response GetAllBills(int billId)
         {
             try
@@ -105,6 +108,7 @@ namespace Clinic.data
             }
         }
 
+        // Delete Bill
         public Response DeleteBill(int billId)
         {
             try

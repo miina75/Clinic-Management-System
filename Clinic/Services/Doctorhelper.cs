@@ -1,4 +1,4 @@
-﻿// data/Doctorhelper.cs
+﻿
 using Clinic.Models;
 using Microsoft.Data.SqlClient;
 
@@ -8,6 +8,7 @@ namespace Clinic.data
     {
         string connectionString = "Data Source=DESKTOP-31NBFCJ\\SQLEXPRESS;Initial Catalog=ClinicDB;Integrated Security=True;Trust Server Certificate=True";
 
+        // Register Doctor
         public Response DoctorRegistration(Doctor d)
         {
             try
@@ -37,6 +38,7 @@ namespace Clinic.data
             }
         }
 
+        // Update Doctor
         public Response UpdateDoctor(Doctor d)
         {
             try
@@ -68,6 +70,7 @@ namespace Clinic.data
             }
         }
 
+        // Get All Doctors or Get Doctor by ID
         public Response GetAllDoctors(int doctorId)
         {
             try
@@ -113,6 +116,7 @@ namespace Clinic.data
             }
         }
 
+        // Delete Doctor
         public Response DeleteDoctor(int doctorId)
         {
             try
