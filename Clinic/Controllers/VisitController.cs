@@ -4,14 +4,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Clinic.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/Visit")]
     [ApiController]
     public class VisitController : ControllerBase
     {
         Visithelper helper = new Visithelper();
 
-        // POST: api/Patient/Register
-        [HttpPost("Register")]
+        // POST: api/Visit/Register
+        [HttpPost("")]
         public IActionResult Register(Visit v)
         {
             Response response = helper.VisitRegistration(v);
@@ -19,8 +19,8 @@ namespace Clinic.Controllers
             else return BadRequest(response);
         }
 
-        // PUT: api/Patient/Update/5
-        [HttpPut("Update/{id}")]
+        // PUT: api/Visit/Update/5
+        [HttpPut("{id}")]
         public IActionResult Update(int id, Visit v)
         {
             v.VisitId = id;
@@ -29,8 +29,8 @@ namespace Clinic.Controllers
             else return BadRequest(response);
         }
 
-        // GET: api/Patient/GetAll
-        [HttpGet("GetAll")]
+        // GET: api/Visit/GetAll
+        [HttpGet("")]
         public IActionResult GetAll()
         {
             Response response = helper.GetAllVisits(0);
@@ -38,8 +38,8 @@ namespace Clinic.Controllers
             else return NotFound(response);
         }
 
-        // GET: api/Patient/GetById/5
-        [HttpGet("GetById/{id}")]
+        // GET: api/Visit/GetById/5
+        [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
             Response response = helper.GetAllVisits(id);
@@ -47,8 +47,8 @@ namespace Clinic.Controllers
             else return NotFound(response);
         }
 
-        // DELETE: api/Patient/Delete/5
-        [HttpDelete("Delete/{id}")]
+        // DELETE: api/Visit/Delete/5
+        [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
             Response response = helper.DeleteVisit(id);

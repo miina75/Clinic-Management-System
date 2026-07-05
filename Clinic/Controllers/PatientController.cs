@@ -4,14 +4,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Clinic.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/Patient")]
     [ApiController]
     public class PatientController : ControllerBase
     {
         Patienthelper helper = new Patienthelper();
 
         // POST: api/Patient/Register
-        [HttpPost("Register")]
+        [HttpPost("")]
         public IActionResult Register(Patient p)
         {
             Response response = helper.PatientRegistration(p);
@@ -20,7 +20,7 @@ namespace Clinic.Controllers
         }
 
         // PUT: api/Patient/Update/5
-        [HttpPut("Update/{id}")]
+        [HttpPut("{id}")]
         public IActionResult Update(int id, Patient p)
         {
             p.PatientId = id;
@@ -30,7 +30,7 @@ namespace Clinic.Controllers
         }
 
         // GET: api/Patient/GetAll
-        [HttpGet("GetAll")]
+        [HttpGet("")]
         public IActionResult GetAll()
         {
             Response response = helper.GetAllPatients(0);
@@ -39,7 +39,7 @@ namespace Clinic.Controllers
         }
 
         // GET: api/Patient/GetById/5
-        [HttpGet("GetById/{id}")]
+        [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
             Response response = helper.GetAllPatients(id);
@@ -48,7 +48,7 @@ namespace Clinic.Controllers
         }
 
         // DELETE: api/Patient/Delete/5
-        [HttpDelete("Delete/{id}")]
+        [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
             Response response = helper.DeletePatient(id);
