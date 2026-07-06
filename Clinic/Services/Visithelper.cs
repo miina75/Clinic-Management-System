@@ -1,24 +1,27 @@
-﻿
-using Clinic.Models;
-using Microsoft.Data.SqlClient;
+﻿using Clinic.Models;
+using Npgsql;
 
 namespace Clinic.data
 {
     public class Visithelper
     {
-        string connectionString = "Data Source=DESKTOP-31NBFCJ\\SQLEXPRESS;Initial Catalog=ClinicDB;Integrated Security=True;Trust Server Certificate=True";
+        // NOTE: If your password contains special characters like '@', either URL-encode
+        // them or use the keyword/value connection string format below instead of the URI form.
+        // Example keyword form:
+        // "Host=aws-0-eu-central-1.pooler.supabase.com;Port=5432;Username=postgres.vbvhqigyistchxkuncoj;Password=YOUR_PASSWORD;Database=postgres"
+        string connectionString = "Host=aws-0-eu-central-1.pooler.supabase.com;Port=5432;Username=postgres.vbvhqigyistchxkuncoj;Password=AminaLoveYou143@;Database=postgres";
 
         // Register Visit
         public Response VisitRegistration(Visit v)
         {
             try
             {
-                using (SqlConnection con = new SqlConnection(connectionString))
+                using (NpgsqlConnection con = new NpgsqlConnection(connectionString))
                 {
                     con.Open();
                     string query = "INSERT INTO Visits (PatientId, DoctorId, Diagnosis) " +
                                    "VALUES(@PatientId, @DoctorId, @Diagnosis)";
-                    SqlCommand cmd = new SqlCommand(query, con);
+                    NpgsqlCommand cmd = new NpgsqlCommand(query, con);
                     cmd.Parameters.AddWithValue("@PatientId", v.PatientId);
                     cmd.Parameters.AddWithValue("@DoctorId", v.DoctorId);
                     cmd.Parameters.AddWithValue("@Diagnosis", v.Diagnosis);
@@ -40,13 +43,13 @@ namespace Clinic.data
         {
             try
             {
-                using (SqlConnection con = new SqlConnection(connectionString))
+                using (NpgsqlConnection con = new NpgsqlConnection(connectionString))
                 {
                     con.Open();
                     string query = @"UPDATE Visits 
                                      SET PatientId = @PatientId, DoctorId = @DoctorId, Diagnosis = @Diagnosis 
                                      WHERE VisitId = @VisitId";
-                    SqlCommand cmd = new SqlCommand(query, con);
+                    NpgsqlCommand cmd = new NpgsqlCommand(query, con);
                     cmd.Parameters.AddWithValue("@PatientId", v.PatientId);
                     cmd.Parameters.AddWithValue("@DoctorId", v.DoctorId);
                     cmd.Parameters.AddWithValue("@Diagnosis", v.Diagnosis);
@@ -70,17 +73,17 @@ namespace Clinic.data
             try
             {
                 List<Visit> data = new List<Visit>();
-                using (SqlConnection con = new SqlConnection(connectionString))
+                using (NpgsqlConnection con = new NpgsqlConnection(connectionString))
                 {
                     con.Open();
                     string query = "SELECT * FROM Visits";
                     query += visitId != 0 ? " WHERE VisitId = @VisitId" : " ORDER BY VisitId DESC";
-                    SqlCommand cmd = new SqlCommand(query, con);
+                    NpgsqlCommand cmd = new NpgsqlCommand(query, con);
 
                     if (visitId != 0)
                         cmd.Parameters.AddWithValue("@VisitId", visitId);
 
-                    SqlDataReader dr = cmd.ExecuteReader();
+                    NpgsqlDataReader dr = cmd.ExecuteReader();
                     if (dr.HasRows)
                     {
                         while (dr.Read())
@@ -113,7 +116,7 @@ namespace Clinic.data
         {
             try
             {
-                using (SqlConnection con = new SqlConnection(connectionString))
+                using (NpgsqlConnection con = new NpgsqlConnection(connectionString))
                 {
                     con.Open();
 
@@ -121,7 +124,7 @@ namespace Clinic.data
                         return new Response { Status = false, Message = "Invalid Visit Id" };
 
                     string query = "DELETE FROM Visits WHERE VisitId = @VisitId";
-                    SqlCommand cmd = new SqlCommand(query, con);
+                    NpgsqlCommand cmd = new NpgsqlCommand(query, con);
                     cmd.Parameters.AddWithValue("@VisitId", visitId);
 
                     if (cmd.ExecuteNonQuery() > 0)

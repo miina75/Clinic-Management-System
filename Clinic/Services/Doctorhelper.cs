@@ -1,24 +1,25 @@
-﻿
-using Clinic.Models;
-using Microsoft.Data.SqlClient;
+﻿using Clinic.Models;
+using Npgsql;
 
 namespace Clinic.data
 {
     public class Doctorhelper
     {
-        string connectionString = "Data Source=DESKTOP-31NBFCJ\\SQLEXPRESS;Initial Catalog=ClinicDB;Integrated Security=True;Trust Server Certificate=True";
+        // NOTE: keep this in sync with the connection string used in the other helpers.
+        // Consider moving this to configuration/environment variables instead of hardcoding it.
+        string connectionString = "Host=aws-0-eu-central-1.pooler.supabase.com;Port=5432;Username=postgres.vbvhqigyistchxkuncoj;Password=AminaLoveYou143@;Database=postgres";
 
         // Register Doctor
         public Response DoctorRegistration(Doctor d)
         {
             try
             {
-                using (SqlConnection con = new SqlConnection(connectionString))
+                using (NpgsqlConnection con = new NpgsqlConnection(connectionString))
                 {
                     con.Open();
                     string query = "INSERT INTO Doctors (UserId, FirstName, LastName, Specialty, Phone, Email) " +
                                    "VALUES(@UserId, @FirstName, @LastName, @Specialty, @Phone, @Email)";
-                    SqlCommand cmd = new SqlCommand(query, con);
+                    NpgsqlCommand cmd = new NpgsqlCommand(query, con);
                     cmd.Parameters.AddWithValue("@UserId", d.UserId);
                     cmd.Parameters.AddWithValue("@FirstName", d.FirstName);
                     cmd.Parameters.AddWithValue("@LastName", d.LastName);
@@ -43,14 +44,14 @@ namespace Clinic.data
         {
             try
             {
-                using (SqlConnection con = new SqlConnection(connectionString))
+                using (NpgsqlConnection con = new NpgsqlConnection(connectionString))
                 {
                     con.Open();
                     string query = @"UPDATE Doctors 
                                      SET FirstName = @FirstName, LastName = @LastName, Specialty = @Specialty, 
                                          Phone = @Phone, Email = @Email 
                                      WHERE DoctorId = @DoctorId";
-                    SqlCommand cmd = new SqlCommand(query, con);
+                    NpgsqlCommand cmd = new NpgsqlCommand(query, con);
                     cmd.Parameters.AddWithValue("@FirstName", d.FirstName);
                     cmd.Parameters.AddWithValue("@LastName", d.LastName);
                     cmd.Parameters.AddWithValue("@Specialty", d.Specialty);
@@ -76,17 +77,17 @@ namespace Clinic.data
             try
             {
                 List<Doctor> data = new List<Doctor>();
-                using (SqlConnection con = new SqlConnection(connectionString))
+                using (NpgsqlConnection con = new NpgsqlConnection(connectionString))
                 {
                     con.Open();
                     string query = "SELECT * FROM Doctors";
                     query += doctorId != 0 ? " WHERE DoctorId = @DoctorId" : " ORDER BY DoctorId DESC";
-                    SqlCommand cmd = new SqlCommand(query, con);
+                    NpgsqlCommand cmd = new NpgsqlCommand(query, con);
 
                     if (doctorId != 0)
                         cmd.Parameters.AddWithValue("@DoctorId", doctorId);
 
-                    SqlDataReader dr = cmd.ExecuteReader();
+                    NpgsqlDataReader dr = cmd.ExecuteReader();
                     if (dr.HasRows)
                     {
                         while (dr.Read())
@@ -121,7 +122,7 @@ namespace Clinic.data
         {
             try
             {
-                using (SqlConnection con = new SqlConnection(connectionString))
+                using (NpgsqlConnection con = new NpgsqlConnection(connectionString))
                 {
                     con.Open();
 
@@ -129,7 +130,7 @@ namespace Clinic.data
                         return new Response { Status = false, Message = "Invalid Doctor Id" };
 
                     string query = "DELETE FROM Doctors WHERE DoctorId = @DoctorId";
-                    SqlCommand cmd = new SqlCommand(query, con);
+                    NpgsqlCommand cmd = new NpgsqlCommand(query, con);
                     cmd.Parameters.AddWithValue("@DoctorId", doctorId);
 
                     if (cmd.ExecuteNonQuery() > 0)

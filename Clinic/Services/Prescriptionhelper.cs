@@ -1,24 +1,25 @@
-﻿
-using Clinic.Models;
-using Microsoft.Data.SqlClient;
+﻿using Clinic.Models;
+using Npgsql;
 
 namespace Clinic.data
 {
     public class Prescriptionhelper
     {
-        string connectionString = "Data Source=DESKTOP-31NBFCJ\\SQLEXPRESS;Initial Catalog=ClinicDB;Integrated Security=True;Trust Server Certificate=True";
+        // NOTE: keep this in sync with the connection string used in Visithelper / Usershelper.
+        // Consider moving this to configuration/environment variables instead of hardcoding it.
+        string connectionString = "Host=aws-0-eu-central-1.pooler.supabase.com;Port=5432;Username=postgres.vbvhqigyistchxkuncoj;Password=AminaLoveYou143@;Database=postgres";
 
         // Register Prescription
         public Response PrescriptionRegistration(Prescription p)
         {
             try
             {
-                using (SqlConnection con = new SqlConnection(connectionString))
+                using (NpgsqlConnection con = new NpgsqlConnection(connectionString))
                 {
                     con.Open();
                     string query = "INSERT INTO Prescriptions (VisitId, MedicationName, Dosage, Instructions) " +
                                    "VALUES(@VisitId, @MedicationName, @Dosage, @Instructions)";
-                    SqlCommand cmd = new SqlCommand(query, con);
+                    NpgsqlCommand cmd = new NpgsqlCommand(query, con);
                     cmd.Parameters.AddWithValue("@VisitId", p.VisitId);
                     cmd.Parameters.AddWithValue("@MedicationName", p.MedicationName);
                     cmd.Parameters.AddWithValue("@Dosage", p.Dosage);
@@ -41,14 +42,14 @@ namespace Clinic.data
         {
             try
             {
-                using (SqlConnection con = new SqlConnection(connectionString))
+                using (NpgsqlConnection con = new NpgsqlConnection(connectionString))
                 {
                     con.Open();
                     string query = @"UPDATE Prescriptions 
                                      SET VisitId = @VisitId, MedicationName = @MedicationName, 
                                          Dosage = @Dosage, Instructions = @Instructions 
                                      WHERE PrescriptionId = @PrescriptionId";
-                    SqlCommand cmd = new SqlCommand(query, con);
+                    NpgsqlCommand cmd = new NpgsqlCommand(query, con);
                     cmd.Parameters.AddWithValue("@VisitId", p.VisitId);
                     cmd.Parameters.AddWithValue("@MedicationName", p.MedicationName);
                     cmd.Parameters.AddWithValue("@Dosage", p.Dosage);
@@ -73,17 +74,17 @@ namespace Clinic.data
             try
             {
                 List<Prescription> data = new List<Prescription>();
-                using (SqlConnection con = new SqlConnection(connectionString))
+                using (NpgsqlConnection con = new NpgsqlConnection(connectionString))
                 {
                     con.Open();
                     string query = "SELECT * FROM Prescriptions";
                     query += prescriptionId != 0 ? " WHERE PrescriptionId = @PrescriptionId" : " ORDER BY PrescriptionId DESC";
-                    SqlCommand cmd = new SqlCommand(query, con);
+                    NpgsqlCommand cmd = new NpgsqlCommand(query, con);
 
                     if (prescriptionId != 0)
                         cmd.Parameters.AddWithValue("@PrescriptionId", prescriptionId);
 
-                    SqlDataReader dr = cmd.ExecuteReader();
+                    NpgsqlDataReader dr = cmd.ExecuteReader();
                     if (dr.HasRows)
                     {
                         while (dr.Read())
@@ -116,7 +117,7 @@ namespace Clinic.data
         {
             try
             {
-                using (SqlConnection con = new SqlConnection(connectionString))
+                using (NpgsqlConnection con = new NpgsqlConnection(connectionString))
                 {
                     con.Open();
 
@@ -124,7 +125,7 @@ namespace Clinic.data
                         return new Response { Status = false, Message = "Invalid Prescription Id" };
 
                     string query = "DELETE FROM Prescriptions WHERE PrescriptionId = @PrescriptionId";
-                    SqlCommand cmd = new SqlCommand(query, con);
+                    NpgsqlCommand cmd = new NpgsqlCommand(query, con);
                     cmd.Parameters.AddWithValue("@PrescriptionId", prescriptionId);
 
                     if (cmd.ExecuteNonQuery() > 0)

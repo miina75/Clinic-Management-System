@@ -1,22 +1,26 @@
 ﻿using Clinic.Models;
-using Microsoft.Data.SqlClient;
+using Npgsql;
 
 namespace Clinic.data
 {
     public class Usershelper
     {
-        string connectionString = "Data Source=DESKTOP-31NBFCJ\\SQLEXPRESS;Initial Catalog=ClinicDB;Integrated Security=True;Trust Server Certificate=True";
+        // NOTE: keep this in sync with the connection string used in Visithelper.
+        // Consider moving this to configuration/environment variables instead of hardcoding it.
+        string connectionString = "Host=aws-0-eu-central-1.pooler.supabase.com;Port=5432;Username=postgres.vbvhqigyistchxkuncoj;Password=AminaLoveYou143@;Database=postgres";
 
         // Register User
         public Response UserRegistration(Users u)
         {
             try
             {
-                using (SqlConnection con = new SqlConnection(connectionString))
+                using (NpgsqlConnection con = new NpgsqlConnection(connectionString))
                 {
                     con.Open();
-                    string query = "INSERT INTO Users VALUES(@Username, @Email, @PasswordHash, @Role)";
-                    SqlCommand cmd = new SqlCommand(query, con);
+                    // Column list added explicitly: Postgres (unlike SQL Server) does not
+                    // auto-skip the identity/serial column (UserId) on an unqualified INSERT.
+                    string query = "INSERT INTO Users (Username, Email, PasswordHash, Role) VALUES(@Username, @Email, @PasswordHash, @Role)";
+                    NpgsqlCommand cmd = new NpgsqlCommand(query, con);
                     cmd.Parameters.AddWithValue("@Username", u.Username);
                     cmd.Parameters.AddWithValue("@Email", u.Email);
                     cmd.Parameters.AddWithValue("@PasswordHash", u.PasswordHash);
@@ -39,13 +43,13 @@ namespace Clinic.data
         {
             try
             {
-                using (SqlConnection con = new SqlConnection(connectionString))
+                using (NpgsqlConnection con = new NpgsqlConnection(connectionString))
                 {
                     con.Open();
                     string query = @"UPDATE Users 
                                      SET Username = @Username, PasswordHash = @PasswordHash, Role = @Role 
                                      WHERE UserId = @UserId";
-                    SqlCommand cmd = new SqlCommand(query, con);
+                    NpgsqlCommand cmd = new NpgsqlCommand(query, con);
                     cmd.Parameters.AddWithValue("@Username", u.Username);
                     cmd.Parameters.AddWithValue("@PasswordHash", u.PasswordHash);
                     cmd.Parameters.AddWithValue("@Role", u.Role);
@@ -69,17 +73,17 @@ namespace Clinic.data
             try
             {
                 List<Users> data = new List<Users>();
-                using (SqlConnection con = new SqlConnection(connectionString))
+                using (NpgsqlConnection con = new NpgsqlConnection(connectionString))
                 {
                     con.Open();
                     string query = "SELECT * FROM Users";
                     query += userId != 0 ? " WHERE UserId = @UserId" : " ORDER BY UserId DESC";
-                    SqlCommand cmd = new SqlCommand(query, con);
+                    NpgsqlCommand cmd = new NpgsqlCommand(query, con);
 
                     if (userId != 0)
                         cmd.Parameters.AddWithValue("@UserId", userId);
 
-                    SqlDataReader dr = cmd.ExecuteReader();
+                    NpgsqlDataReader dr = cmd.ExecuteReader();
                     if (dr.HasRows)
                     {
                         while (dr.Read())
@@ -112,7 +116,7 @@ namespace Clinic.data
         {
             try
             {
-                using (SqlConnection con = new SqlConnection(connectionString))
+                using (NpgsqlConnection con = new NpgsqlConnection(connectionString))
                 {
                     con.Open();
 
@@ -120,7 +124,7 @@ namespace Clinic.data
                         return new Response { Status = false, Message = "Invalid User Id" };
 
                     string query = "DELETE FROM Users WHERE UserId = @UserId";
-                    SqlCommand cmd = new SqlCommand(query, con);
+                    NpgsqlCommand cmd = new NpgsqlCommand(query, con);
                     cmd.Parameters.AddWithValue("@UserId", userId);
 
                     if (cmd.ExecuteNonQuery() > 0)
@@ -135,7 +139,7 @@ namespace Clinic.data
             }
         }
 
-        
-        
+
+
     }
 }

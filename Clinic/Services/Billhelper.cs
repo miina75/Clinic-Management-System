@@ -1,24 +1,25 @@
-﻿
-using Clinic.Models;
-using Microsoft.Data.SqlClient;
+﻿using Clinic.Models;
+using Npgsql;
 
 namespace Clinic.data
 {
     public class Billhelper
     {
-        string connectionString = "Data Source=DESKTOP-31NBFCJ\\SQLEXPRESS;Initial Catalog=ClinicDB;Integrated Security=True;Trust Server Certificate=True";
+        // NOTE: keep this in sync with the connection string used in the other helpers.
+        // Consider moving this to configuration/environment variables instead of hardcoding it.
+        string connectionString = "Host=aws-0-eu-central-1.pooler.supabase.com;Port=5432;Username=postgres.vbvhqigyistchxkuncoj;Password=AminaLoveYou143@;Database=postgres";
 
         // Register Bill
         public Response BillRegistration(Bill b)
         {
             try
             {
-                using (SqlConnection con = new SqlConnection(connectionString))
+                using (NpgsqlConnection con = new NpgsqlConnection(connectionString))
                 {
                     con.Open();
                     string query = "INSERT INTO Bills (VisitId, Amount, PaymentStatus) " +
                                    "VALUES(@VisitId, @Amount, @PaymentStatus)";
-                    SqlCommand cmd = new SqlCommand(query, con);
+                    NpgsqlCommand cmd = new NpgsqlCommand(query, con);
                     cmd.Parameters.AddWithValue("@VisitId", b.VisitId);
                     cmd.Parameters.AddWithValue("@Amount", b.Amount);
                     cmd.Parameters.AddWithValue("@PaymentStatus", b.PaymentStatus);
@@ -40,13 +41,13 @@ namespace Clinic.data
         {
             try
             {
-                using (SqlConnection con = new SqlConnection(connectionString))
+                using (NpgsqlConnection con = new NpgsqlConnection(connectionString))
                 {
                     con.Open();
                     string query = @"UPDATE Bills 
                                      SET VisitId = @VisitId, Amount = @Amount, PaymentStatus = @PaymentStatus 
                                      WHERE BillId = @BillId";
-                    SqlCommand cmd = new SqlCommand(query, con);
+                    NpgsqlCommand cmd = new NpgsqlCommand(query, con);
                     cmd.Parameters.AddWithValue("@VisitId", b.VisitId);
                     cmd.Parameters.AddWithValue("@Amount", b.Amount);
                     cmd.Parameters.AddWithValue("@PaymentStatus", b.PaymentStatus);
@@ -70,17 +71,17 @@ namespace Clinic.data
             try
             {
                 List<Bill> data = new List<Bill>();
-                using (SqlConnection con = new SqlConnection(connectionString))
+                using (NpgsqlConnection con = new NpgsqlConnection(connectionString))
                 {
                     con.Open();
                     string query = "SELECT * FROM Bills";
                     query += billId != 0 ? " WHERE BillId = @BillId" : " ORDER BY BillId DESC";
-                    SqlCommand cmd = new SqlCommand(query, con);
+                    NpgsqlCommand cmd = new NpgsqlCommand(query, con);
 
                     if (billId != 0)
                         cmd.Parameters.AddWithValue("@BillId", billId);
 
-                    SqlDataReader dr = cmd.ExecuteReader();
+                    NpgsqlDataReader dr = cmd.ExecuteReader();
                     if (dr.HasRows)
                     {
                         while (dr.Read())
@@ -113,7 +114,7 @@ namespace Clinic.data
         {
             try
             {
-                using (SqlConnection con = new SqlConnection(connectionString))
+                using (NpgsqlConnection con = new NpgsqlConnection(connectionString))
                 {
                     con.Open();
 
@@ -121,7 +122,7 @@ namespace Clinic.data
                         return new Response { Status = false, Message = "Invalid Bill Id" };
 
                     string query = "DELETE FROM Bills WHERE BillId = @BillId";
-                    SqlCommand cmd = new SqlCommand(query, con);
+                    NpgsqlCommand cmd = new NpgsqlCommand(query, con);
                     cmd.Parameters.AddWithValue("@BillId", billId);
 
                     if (cmd.ExecuteNonQuery() > 0)
