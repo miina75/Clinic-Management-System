@@ -9,7 +9,8 @@ namespace Clinic.data
         // them or use the keyword/value connection string format below instead of the URI form.
         // Example keyword form:
         // "Host=aws-0-eu-central-1.pooler.supabase.com;Port=5432;Username=postgres.vbvhqigyistchxkuncoj;Password=YOUR_PASSWORD;Database=postgres"
-        string connectionString = "Host=aws-0-eu-central-1.pooler.supabase.com;Port=5432;Username=postgres.vbvhqigyistchxkuncoj;Password=AminaLoveYou143@;Database=postgres";
+        string connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING")
+       ?? throw new InvalidOperationException("DB_CONNECTION_STRING is not set");
 
         // Register Visit
         public Response VisitRegistration(Visit v)

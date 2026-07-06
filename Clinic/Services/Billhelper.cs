@@ -7,7 +7,8 @@ namespace Clinic.data
     {
         // NOTE: keep this in sync with the connection string used in the other helpers.
         // Consider moving this to configuration/environment variables instead of hardcoding it.
-        string connectionString = "Host=aws-0-eu-central-1.pooler.supabase.com;Port=5432;Username=postgres.vbvhqigyistchxkuncoj;Password=AminaLoveYou143@;Database=postgres";
+        string connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING")
+        ?? throw new InvalidOperationException("DB_CONNECTION_STRING is not set");
 
         // Register Bill
         public Response BillRegistration(Bill b)
