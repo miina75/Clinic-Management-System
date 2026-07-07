@@ -1,5 +1,4 @@
-﻿
-namespace Clinic.Models
+﻿namespace Clinic.Models
 {
     public class Visit
     {
@@ -8,5 +7,9 @@ namespace Clinic.Models
         public int DoctorId { get; set; }
         public DateTime VisitDate { get; set; }
         public string Diagnosis { get; set; } = "";
+
+       
+        public string? PatientName { get; set; }
+        public string? DoctorName { get; set; }
     }
 }
