@@ -5,8 +5,7 @@ namespace Clinic.data
 {
     public class Patienthelper
     {
-        // NOTE: keep this in sync with the connection string used in the other helpers.
-        // Consider moving this to configuration/environment variables instead of hardcoding it.
+
         string connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING")
        ?? throw new InvalidOperationException("DB_CONNECTION_STRING is not set");
 
@@ -102,7 +101,7 @@ namespace Clinic.data
                                 FirstName = dr["FirstName"].ToString(),
                                 LastName = dr["LastName"].ToString(),
                                 Gender = dr["Gender"].ToString(),
-                                DateOfBirth = Convert.ToDateTime(dr["DateOfBirth"]),
+                                DateOfBirth = ((DateOnly)dr["DateOfBirth"]).ToDateTime(TimeOnly.MinValue),
                                 Phone = dr["Phone"].ToString(),
                                 Address = dr["Address"].ToString()
                             });
